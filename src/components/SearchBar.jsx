@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './style.css';
+import '../page/SearchPage/SearchPage.css';
 
 const SearchBar = ({placeholder, onChange, onClear, onClick, value=""}) => {
     return (

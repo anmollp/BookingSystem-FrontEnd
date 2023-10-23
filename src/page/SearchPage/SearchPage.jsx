@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import SearchBar from './Searchbar'
-import { movieData } from './movie-data';
-import { majorCities, urls } from './Config.js';
+import { movieData } from '../../movie-data';
+import { majorCities, urls } from '../../Config';
 import axios from 'axios';
-import Header from './Header.js';
-import Footer from './Footer.js';
-import Dropdown from './Dropdown';
-import MovieCard from './Movie';
-import './style.css';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import Dropdown from '../../components/Dropdown';
+import MovieCard from '../../components/Movie';
+import SearchBar from '../../components/SearchBar';
+import '../SearchPage/SearchPage.css';
 
 const SearchScreen = () => {
   const [city, setCity] = useState('');
