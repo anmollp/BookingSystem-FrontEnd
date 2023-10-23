@@ -1,5 +1,5 @@
 import React from 'react';
-import './style.css';
+import '../page/SearchPage/SearchPage.css';
 
 const City = ({onSelect, item}) => {
   return (

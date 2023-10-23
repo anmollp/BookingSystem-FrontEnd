@@ -1,0 +1,14 @@
+.header h1 {
+    color: white;
+    margin-left: 50%;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.header div {
+    color: white;
+    margin-right: 1%;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
