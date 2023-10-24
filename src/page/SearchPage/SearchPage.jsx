@@ -8,7 +8,7 @@ import '../SearchPage/SearchPage.css';
 import { getCitites, getMovies } from '../../api/apiCalls';
 
 const SearchScreen = () => {
-  const majorCities = useRef();
+  const majorCities = useRef([]);
   const [city, setCity] = useState('');
   const [cities, setCities] = useState([]);
   const [movies, setMovies] = useState([]);
@@ -21,8 +21,10 @@ const SearchScreen = () => {
       majorCities.current = response.data;
     }
     )
-    .catch((error) => 
-      console.error('Error fetching cities:', error)
+    .catch((error) => {
+      console.error('Error fetching cities:', error);
+      majorCities.current = [];
+    }
     )
 
     const movieResponse = getMovies();
