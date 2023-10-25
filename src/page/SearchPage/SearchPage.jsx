@@ -1,23 +1,23 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useNavigate } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Dropdown from '../../components/Dropdown';
 import SearchBar from '../../components/SearchBar';
 import Carousel from 'react-bootstrap/Carousel';
 import '../SearchPage/SearchPage.css';
-import { getCitites, getMovies } from '../../api/apiCalls';
+import { getCitites, getMovies, getMoviesByCity, getTheatersByCity } from '../../api/apiCalls';
 
 const SearchScreen = () => {
   const majorCities = useRef([]);
   const [city, setCity] = useState('');
   const [cities, setCities] = useState([]);
   const [movies, setMovies] = useState([]);
+  const [theaters, setTheaters] = useState([]);
 
 
   useEffect(() => {
     const cityResponse = getCitites();
     cityResponse.then((response) => {
-      setCities(response.data);
       majorCities.current = response.data;
     }
     )
@@ -53,20 +53,24 @@ const SearchScreen = () => {
     }
   };
 
-  const handleClick = () => {
-    setCities(majorCities.current)
-  }
 
   const handleCitySelection = (selectedCity) => {
     setCity(selectedCity.cityName);
-    // setCities([])
-    // axios.get(urls.getMoviesUrl + `?city=${selectedCity.cityName}`)
-    //   .then((response) => {
-    //     setMovies(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error fetching movies:', error);
-    //   });
+    const theaterCityresponse = getTheatersByCity(selectedCity.cityId);
+    theaterCityresponse.then((response) => {
+      console.log("Theaters: ", response.data);
+      setTheaters(response.data);
+    })
+    .catch((error) => {
+      console.error("Couldn't fetch theaters for: ", selectedCity.cityId);
+    })
+
+    const movieCityResponse = getMoviesByCity(selectedCity.cityId);
+    movieCityResponse.then((response) => {
+      console.log("Movies in city: ", response.data);
+      setMovies(response.data);
+    })
+    .catch((error) => console.error("Couldn't fetch movies for city"))
   };
 
   const handleClearSearch = () => {
@@ -82,7 +86,7 @@ const SearchScreen = () => {
           placeholder="Search for a city 🗽..."
           onChange={handleSearchChange}
           onClear={handleClearSearch}
-          onClick={handleClick}
+          onClick={() => setCities(majorCities.current)}
           value={city}
         />
         <Dropdown data={cities} handleSelection={handleCitySelection}/>
@@ -92,7 +96,6 @@ const SearchScreen = () => {
         {movies.map((movie) => 
           <Carousel.Item key={movie.movieId} className='movie-card'>
             <h3>{movie.movieName}</h3>
-            {console.log(movie.imageUrl)}
             <img src={movie.imageUrl} alt={movie.movieName} />
             <Carousel.Caption>
             <p>{movie.content}</p>

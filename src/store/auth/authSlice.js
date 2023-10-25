@@ -10,21 +10,15 @@ const initialState = {
     loading: false,
     userInfo: null,
     userToken,
+    isLoggedIn: false,
+    isRegistered: false,
     error: null,
-    success: false,
 }
 
 export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        logout: (state) => {
-            localStorage.removeItem('cbs-jwt-token')
-            state.loading = false;
-            state.userInfo = null;
-            state.userToken = null;
-            state.error = null;
-        },
         setCredentials: (state, {payload}) => {
             state.userInfo = payload;
         }
@@ -39,6 +33,8 @@ export const authSlice = createSlice({
             state.loading = false;
             state.userInfo = payload;
             state.userToken = payload;
+            state.isLoggedIn  = true;
+            state.isRegistered = true;
         },
         [userLogin.rejected]: (state, { payload }) => {
             state.loading = false;
@@ -52,7 +48,7 @@ export const authSlice = createSlice({
         [userLogout.fulfilled]: (state, {payload}) => {
             state.loading = false;
             state.userToken = null;
-            state.success = true
+            state.isLoggedIn = false;
         },
         [userLogout.rejected]: (state, { payload }) => {
             state.loading = false;
@@ -65,7 +61,7 @@ export const authSlice = createSlice({
         },
         [registerUser.fulfilled]: (state, { payload }) => {
             state.loading = false;
-            state.success = true; // registration successful
+            state.isRegistered = true; // registration successful
         },
         [registerUser.rejected]: (state, { payload }) => {
             state.loading = false;

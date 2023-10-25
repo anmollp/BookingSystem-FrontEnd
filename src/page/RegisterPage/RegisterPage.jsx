@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import Header from '../../components/Header';
-import Footer from '../../components/Footer'
 import { registerUser } from '../../store/auth/authActions';
 import Error from '../../components/Error';
 import Spinner from '../../components/Spinner';
+import BackgroundSlider from '../../components/BackgroundSlider';
 import './RegisterPage.css';
 
 const RegisterPage = () => {
     const [customError, setCustomError] = useState(null);
 
-    const {loading, userInfo, error, success} = useSelector(
-        (state) => state.auth
-    )
+    const {loading, userInfo, isRegistered, error} = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {register, handleSubmit} = useForm();
@@ -23,10 +20,10 @@ const RegisterPage = () => {
         // redirect authenticated user to profile screen
         if (userInfo) navigate('/search')
         // redirect user to login page if registration was successful
-        if (success) navigate('/login')
+        if (isRegistered) navigate('/login')
         // Show error if registration was unsuccessful
         if(error) setCustomError(error)
-      }, [navigate, userInfo, success, error])
+      }, [navigate, userInfo, isRegistered, error])
 
     const submitForm = (data) => {
         if(data.password !== data.confirmPassword) {
@@ -39,9 +36,10 @@ const RegisterPage = () => {
 
     return (
         <>
-        <Header/>
-        <form className="container" onSubmit={handleSubmit(submitForm)}>
+        <BackgroundSlider/>
+        <div className='container'>
         <h1 className="title">Join the Cinematic Journey: Register Now!</h1>
+        <form onSubmit={handleSubmit(submitForm)}>
             {error && <Error>{customError}</Error>}
             <div className="form-group">
                 <input
@@ -70,10 +68,12 @@ const RegisterPage = () => {
                 required
                 />
             </div>
+            <div className="form-group">
             <button type='submit' className='register-button' disabled={loading}>{loading ? <Spinner/> : 'Register'}</button>
+            </div>
         </form>
-        <Footer/>
-        </>
+        </div>
+    </>
     );
 };
 
